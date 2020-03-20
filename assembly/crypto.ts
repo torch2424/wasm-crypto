@@ -1998,7 +1998,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  export function faPointValidate(q: Uint8Array): bool {
     let q_ = newGe();
 
-    return (booleanToInt(!ristrettoIsIdentity(q))) & ristrettoUnpack(q_, q);
+    return (booleanToInt(!ristrettoIsIdentity(q))) & booleanToInt(ristrettoUnpack(q_, q));
 }
 
 /**
