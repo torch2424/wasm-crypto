@@ -87,26 +87,26 @@ function _hashblocks(st: Uint8Array, m: Uint8Array, n: isize): isize {
         t: u64;
 
     for (let i = 0; i < 8; ++i) {
-        z[i] = a[i] = load64_be(st, i << 3);
+        z[i] = a[i] = <u32>(load64_be(st, i << 3));
     }
     let pos = 0;
     while (n >= 128) {
         for (let i = 0; i < 16; ++i) {
-            w[i] = load64_be(m, (i << 3) + pos);
+            w[i] = <u32>(load64_be(m, (i << 3) + pos));
         }
         for (let i = 0; i < 80; ++i) {
             for (let j = 0; j < 8; ++j) {
                 b[j] = a[j];
             }
             t = a[7] + Sigma1(a[4]) + Ch(a[4], a[5], a[6]) + K[i] + w[i & 15];
-            b[7] = t + Sigma0(a[0]) + Maj(a[0], a[1], a[2]);
-            b[3] += t;
+            b[7] = <u32>(t + Sigma0(a[0]) + Maj(a[0], a[1], a[2]));
+            b[3] += <u32>(t);
             for (let j = 0; j < 8; ++j) {
                 a[(j + 1) & 7] = b[j];
             }
             if ((i & 15) === 15) {
                 for (let j = 0; j < 16; ++j) {
-                    w[j] += w[(j + 9) & 15] + sigma0(w[(j + 1) & 15]) + sigma1(w[(j + 14) & 15]);
+                    w[j] += <u32>(w[(j + 9) & 15] + sigma0(w[(j + 1) & 15]) + sigma1(w[(j + 14) & 15]));
                 }
             }
         }
@@ -473,7 +473,7 @@ function fe25519(init: i64[]): Fe25519 {
     let r = newFe25519();
 
     for (let i = 0, len = init.length; i < len; ++i) {
-        r[i] = init[i];
+        r[i] = <i32>(init[i]);
     }
     return r;
 }
