@@ -1050,7 +1050,7 @@ function ristrettoUnpack(h: Ge, s: GePacked, neg: bool = false): bool {
     fe25519Mult(t, x, y);
 
 
-    return !(booleanToInt(!was_square) | booleanToInt(fe25519IsNegative(t) ^ neg) | booleanToInt(fe25519IsZero(y)));
+    return !(booleanToInt(!was_square) | (booleanToInt(fe25519IsNegative(t)) ^ neg) | booleanToInt(fe25519IsZero(y)));
 }
 
 function ristrettoPack(s: GePacked, h: Ge): void {
