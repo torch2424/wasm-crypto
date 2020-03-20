@@ -227,9 +227,9 @@ function allZeros(x: Uint8Array): bool {
 
 // mod(2^252 + 27742317777372353535851937790883648495) field arithmetic
 
-type Scalar = Int64Array(64);
-type ScalarPacked = Uint8Array(32);
-type ScalarDouble = Uint8Array(64);
+type Scalar = Int64Array;
+type ScalarPacked = Uint8Array;
+type ScalarDouble = Uint8Array;
 
 @inline function newScalar(): Scalar {
     return new Int64Array(64);
