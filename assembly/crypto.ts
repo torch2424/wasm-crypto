@@ -6,6 +6,9 @@ const RELEASE: bool = true;
 
 // export const U8ARRAY_ID = idof<Uint8Array>();
 
+let Uint64Array = Uint32Array;
+let Int64Array = Int32Array;
+
 // Helpers
 
  function setU8(t: Uint8Array, s: Uint8Array, o: isize = 0): void {
