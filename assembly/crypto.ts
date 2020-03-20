@@ -709,7 +709,7 @@ function fe25519Pow2523(o: Fe25519, i: Fe25519): void {
 
 // Ed25519 group arithmetic
 
-@sealed @unmanaged
+ 
 class Ge {
     x: Fe25519;
     y: Fe25519;
@@ -971,10 +971,20 @@ function ristrettoSqrtRatioM1(x: Fe25519, u: Fe25519, v: Fe25519): bool {
     let has_f_root = fe25519IsZero(f_root_check);
     fe25519Mult(x_sqrtm1, x, SQRTM1);
 
-    fe25519Cmov(x, x_sqrtm1, (has_p_root | has_f_root) as i64);
+    let has_p_root_binary_or_has_f_root: i64 = 0;
+    if (has_p_root || has_f_root) {
+      has_p_root_binary_or_has_f_root = 1;
+    }
+
+    fe25519Cmov(x, x_sqrtm1, has_p_root_binary_or_has_f_root);
     fe25519Abs(x, x);
 
-    return has_m_root | has_p_root;
+    let has_p_root_binary_or_has_m_root: i64 = 0;
+    if (has_p_root || has_m_root) {
+      has_p_root_binary_or_has_m_root = 1;
+    }
+
+    return has_p_root_binary_or_has_m_root;
 }
 
 function ristrettoIsCanonical(s: GePacked): bool {
