@@ -724,7 +724,7 @@ class Ge {
     }
 }
 
-type GePacked = Uint8Array(32);
+type GePacked = Uint8Array;
 
 @inline function newGe(): Ge {
     return new Ge();
@@ -1125,7 +1125,7 @@ function ristrettoElligator(p: Ge, t: Fe25519): void {
     fe25519Mult(p.t, w0, w2);
 }
 
-type Hash512 = Uint8Array(64);
+type Hash512 = Uint8Array;
 
 function ristrettoFromHash(s: GePacked, r: Hash512): void {
     let r0 = newFe25519(), r1 = newFe25519();
@@ -1171,8 +1171,8 @@ for (let i = 0; i < 32; ++i) {
 
 // Ed25519
 
-type KeyPair = Uint8Array(64);
-type Signature = Uint8Array(64);
+type KeyPair = Uint8Array;
+type Signature = Uint8Array;
 
 function _signEdKeypairFromSeed(kp: KeyPair): void {
     let d = new Uint8Array(64);
