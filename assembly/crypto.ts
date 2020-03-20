@@ -450,8 +450,8 @@ function scSub(a: Uint8Array, b: Uint8Array): void {
 // mod(2^255-19) field arithmetic - Doesn't use 51-bit limbs yet to keep the
 // code short and simple
 
-type Fe25519 = Int64Array(16);
-type Fe25519Packed = Uint8Array(32);
+type Fe25519 = Int64Array;
+type Fe25519Packed = Uint8Array;
 
 @inline function newFe25519(): Fe25519 {
     return new Int64Array(16);
