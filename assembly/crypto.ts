@@ -4,7 +4,7 @@ import { precompBase } from './precomp';
 
 const RELEASE: bool = true;
 
-export const U8ARRAY_ID = idof<Uint8Array>();
+// export const U8ARRAY_ID = idof<Uint8Array>();
 
 // Helpers
 
