@@ -6,9 +6,6 @@ const RELEASE: bool = true;
 
 // export const U8ARRAY_ID = idof<Uint8Array>();
 
-let Uint64Array = Uint32Array;
-let Int64Array = Int32Array;
-
 // Helpers
 
  function setU8(t: Uint8Array, s: Uint8Array, o: isize = 0): void {
@@ -83,10 +80,10 @@ const K: u64[] = [
 ];
 
 function _hashblocks(st: Uint8Array, m: Uint8Array, n: isize): isize {
-    let z = new Uint64Array(8),
-        b = new Uint64Array(8),
-        a = new Uint64Array(8),
-        w = new Uint64Array(16),
+    let z = new Uint32Array(8),
+        b = new Uint32Array(8),
+        a = new Uint32Array(8),
+        w = new Uint32Array(16),
         t: u64;
 
     for (let i = 0; i < 8; ++i) {
@@ -238,12 +235,12 @@ function allZeros(x: Uint8Array): bool {
 
 // mod(2^252 + 27742317777372353535851937790883648495) field arithmetic
 
-type Scalar = Int64Array;
+type Scalar = Int32Array;
 type ScalarPacked = Uint8Array;
 type ScalarDouble = Uint8Array;
 
  function newScalar(): Scalar {
-    return new Int64Array(64);
+    return new Int32Array(64);
 }
 
  function newScalarPacked(): ScalarPacked {
@@ -254,7 +251,7 @@ type ScalarDouble = Uint8Array;
     return new Uint8Array(64);
 }
 
-let _L: Int64Array = new Int64Array(32);
+let _L: Int32Array = new Int32Array(32);
 _L[0] = 237;
 _L[1] = 211;
 _L[2] = 245;
@@ -461,11 +458,11 @@ function scSub(a: Uint8Array, b: Uint8Array): void {
 // mod(2^255-19) field arithmetic - Doesn't use 51-bit limbs yet to keep the
 // code short and simple
 
-type Fe25519 = Int64Array;
+type Fe25519 = Int32Array;
 type Fe25519Packed = Uint8Array;
 
  function newFe25519(): Fe25519 {
-    return new Int64Array(16);
+    return new Int32Array(16);
 }
 
  function newFe25519Packed(): Fe25519Packed {
@@ -670,7 +667,7 @@ function fe25519Carry(o: Fe25519): void {
 }
 
 function fe25519Mult(o: Fe25519, a: Fe25519, b: Fe25519): void {
-    let t = new Int64Array(31 + 1);
+    let t = new Int32Array(31 + 1);
 
     for (let i = 0; i < 16; ++i) {
         let ai = a[i];
@@ -1211,7 +1208,7 @@ function _signEdDetached(sig: Signature, m: Uint8Array, kp: KeyPair, Z: Uint8Arr
     let az = new Uint8Array(64);
     let nonce = newScalarDouble();
     let hram = newScalarDouble();
-    let x = new Int64Array(64);
+    let x = new Int32Array(64);
     let mlen = m.length;
     let hs = _hashInit();
     let r: isize = 0;
@@ -1289,7 +1286,7 @@ function _signDetached(sig: Signature, m: Uint8Array, kp: KeyPair, Z: Uint8Array
     let az = new Uint8Array(64);
     let nonce = newScalarDouble();
     let hram = newScalarDouble();
-    let x = new Int64Array(64);
+    let x = new Int32Array(64);
     let mlen = m.length;
     let hs = _hashInit();
     let r: isize = 0;
