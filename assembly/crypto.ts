@@ -90,7 +90,8 @@ function _hashblocks(st: Uint8Array, m: Uint8Array, n: isize): isize {
         z[i] = a[i] = <u32>(load64_be(st, i << 3));
     }
     let pos = 0;
-    while (n >= 128) {
+    let originalN = n;
+    while (n >= 128 && pos < originalN) {
         for (let i = 0; i < 16; ++i) {
             w[i] = <u32>(load64_be(m, (i << 3) + pos));
         }
