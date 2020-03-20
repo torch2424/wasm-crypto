@@ -14,6 +14,14 @@ export const U8ARRAY_ID = idof<Uint8Array>();
     }
 }
 
+function booleanToInt(value: bool): i32 {
+  if (value) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
 // SHA512
 
  function Sigma0(x: u64): u64 {
@@ -1041,7 +1049,8 @@ function ristrettoUnpack(h: Ge, s: GePacked, neg: bool = false): bool {
     }
     fe25519Mult(t, x, y);
 
-    return !((!was_square) | (fe25519IsNegative(t) ^ neg) | fe25519IsZero(y));
+
+    return !(booleanToInt(!was_square) | booleanToInt(fe25519IsNegative(t) ^ neg) | booleanToInt(fe25519IsZero(y)));
 }
 
 function ristrettoPack(s: GePacked, h: Ge): void {
