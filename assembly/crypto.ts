@@ -8,7 +8,7 @@ export const U8ARRAY_ID = idof<Uint8Array>();
 
 // Helpers
 
-@inline function setU8(t: Uint8Array, s: Uint8Array, o: isize = 0): void {
+ function setU8(t: Uint8Array, s: Uint8Array, o: isize = 0): void {
     for (let i: isize = 0, len = s.length; i < len; ++i) {
         t[i + o] = unchecked(s[i]);
     }
@@ -16,27 +16,27 @@ export const U8ARRAY_ID = idof<Uint8Array>();
 
 // SHA512
 
-@inline function Sigma0(x: u64): u64 {
+ function Sigma0(x: u64): u64 {
     return rotr(x, 28) ^ rotr(x, 34) ^ rotr(x, 39);
 }
 
-@inline function Sigma1(x: u64): u64 {
+ function Sigma1(x: u64): u64 {
     return rotr(x, 14) ^ rotr(x, 18) ^ rotr(x, 41);
 }
 
-@inline function sigma0(x: u64): u64 {
+ function sigma0(x: u64): u64 {
     return rotr(x, 1) ^ rotr(x, 8) ^ (x >> 7);
 }
 
-@inline function sigma1(x: u64): u64 {
+ function sigma1(x: u64): u64 {
     return rotr(x, 19) ^ rotr(x, 61) ^ (x >> 6);
 }
 
-@inline function Ch(x: u64, y: u64, z: u64): u64 {
+ function Ch(x: u64, y: u64, z: u64): u64 {
     return (x & y) ^ (~x & z);
 }
 
-@inline function Maj(x: u64, y: u64, z: u64): u64 {
+ function Maj(x: u64, y: u64, z: u64): u64 {
     return (x & y) ^ (x & z) ^ (y & z);
 }
 
@@ -231,15 +231,15 @@ type Scalar = Int64Array;
 type ScalarPacked = Uint8Array;
 type ScalarDouble = Uint8Array;
 
-@inline function newScalar(): Scalar {
+ function newScalar(): Scalar {
     return new Int64Array(64);
 }
 
-@inline function newScalarPacked(): ScalarPacked {
+ function newScalarPacked(): ScalarPacked {
     return new Uint8Array(32);
 }
 
-@inline function newScalarDouble(): ScalarDouble {
+ function newScalarDouble(): ScalarDouble {
     return new Uint8Array(64);
 }
 
@@ -424,7 +424,7 @@ function scInverse(s: Uint8Array): Uint8Array {
     return res;
 }
 
-@inline function scClamp(s: ScalarPacked): void {
+ function scClamp(s: ScalarPacked): void {
     s[0] &= 248;
     s[31] = (s[31] & 127) | 64;
 }
@@ -453,11 +453,11 @@ function scSub(a: Uint8Array, b: Uint8Array): void {
 type Fe25519 = Int64Array;
 type Fe25519Packed = Uint8Array;
 
-@inline function newFe25519(): Fe25519 {
+ function newFe25519(): Fe25519 {
     return new Int64Array(16);
 }
 
-@inline function newFe25519Packed(): Fe25519Packed {
+ function newFe25519Packed(): Fe25519Packed {
     return new Uint8Array(32);
 }
 
@@ -508,7 +508,7 @@ let SQDMONE = fe25519([
     0x4eeb, 0x529b, 0xd32f, 0x4cdc, 0x2241, 0xf66c, 0xb37a, 0x5968,
 ]);
 
-@inline function fe25519Copy(r: Fe25519, a: Fe25519): void {
+ function fe25519Copy(r: Fe25519, a: Fe25519): void {
     unchecked(r[0] = a[0]);
     unchecked(r[1] = a[1]);
     unchecked(r[2] = a[2]);
@@ -527,7 +527,7 @@ let SQDMONE = fe25519([
     unchecked(r[15] = a[15]);
 }
 
-@inline function fe25519Cmov(p: Fe25519, q: Fe25519, b: i64): void {
+ function fe25519Cmov(p: Fe25519, q: Fe25519, b: i64): void {
     let mask = ~(b - 1);
     unchecked(p[0] ^= (p[0] ^ q[0]) & mask);
     unchecked(p[1] ^= (p[1] ^ q[1]) & mask);
@@ -622,13 +622,13 @@ function fe25519IsZero(a: Fe25519): bool {
     return c === 0;
 }
 
-@inline function fe25519Add(o: Fe25519, a: Fe25519, b: Fe25519): void {
+ function fe25519Add(o: Fe25519, a: Fe25519, b: Fe25519): void {
     for (let i = 0; i < 16; ++i) {
         o[i] = a[i] + b[i];
     }
 }
 
-@inline function fe25519Sub(o: Fe25519, a: Fe25519, b: Fe25519): void {
+ function fe25519Sub(o: Fe25519, a: Fe25519, b: Fe25519): void {
     for (let i = 0; i < 16; ++i) {
         o[i] = a[i] - b[i];
     }
@@ -649,7 +649,7 @@ function fe25519Carry(o: Fe25519): void {
     o[15] -= c << 16;
 }
 
-@inline function fe25519Reduce(o: Fe25519, a: Fe25519): void {
+ function fe25519Reduce(o: Fe25519, a: Fe25519): void {
     for (let i = 0; i < 15; ++i) {
         a[i] += 38 as i64 * a[i + 16];
     }
@@ -670,7 +670,7 @@ function fe25519Mult(o: Fe25519, a: Fe25519, b: Fe25519): void {
     fe25519Reduce(o, t);
 }
 
-@inline function fe25519Sq(o: Fe25519, a: Fe25519): void {
+ function fe25519Sq(o: Fe25519, a: Fe25519): void {
     fe25519Mult(o, a, a);
 }
 
@@ -716,7 +716,7 @@ class Ge {
     z: Fe25519;
     t: Fe25519;
 
-    @inline constructor() {
+     constructor() {
         this.x = newFe25519();
         this.y = newFe25519();
         this.z = newFe25519();
@@ -726,15 +726,15 @@ class Ge {
 
 type GePacked = Uint8Array;
 
-@inline function newGe(): Ge {
+ function newGe(): Ge {
     return new Ge();
 }
 
-@inline function newGePacked(): GePacked {
+ function newGePacked(): GePacked {
     return new Uint8Array(32);
 }
 
-@inline function geCopy(r: Ge, a: Ge): void {
+ function geCopy(r: Ge, a: Ge): void {
     fe25519Copy(r.x, a.x);
     fe25519Copy(r.y, a.y);
     fe25519Copy(r.z, a.z);
@@ -773,7 +773,7 @@ function add(p: Ge, q: Ge): void {
     fe25519Mult(p.t, Ae, Ah);
 }
 
-@inline function cmov(p: Ge, q: Ge, b: i64): void {
+ function cmov(p: Ge, q: Ge, b: i64): void {
     fe25519Cmov(p.x, q.x, b);
     fe25519Cmov(p.y, q.y, b);
     fe25519Cmov(p.z, q.z, b);
@@ -834,7 +834,7 @@ function scalarmult(p: Ge, s: ScalarPacked, q: Ge): void {
     }
 }
 
-@inline function fe25519CopyPrecomp(r: Fe25519, a: i64[]): void {
+ function fe25519CopyPrecomp(r: Fe25519, a: i64[]): void {
     unchecked(r[0] = a[0]);
     unchecked(r[1] = a[1]);
     unchecked(r[2] = a[2]);
@@ -923,7 +923,7 @@ function unpack(r: Ge, p: GePacked, neg: bool = false): bool {
     return true;
 }
 
-@inline function isIdentity(s: GePacked): bool {
+ function isIdentity(s: GePacked): bool {
     let c: u8 = unchecked(s[0]) ^ 0x01;
     for (let i = 1; i < 31; i++) {
         c |= unchecked(s[i]);
@@ -1080,7 +1080,7 @@ function ristrettoPack(s: GePacked, h: Ge): void {
     fe25519Pack(s, s_);
 }
 
-@inline function ristrettoIsIdentity(s: GePacked): bool {
+ function ristrettoIsIdentity(s: GePacked): bool {
     return allZeros(s);
 }
 
@@ -1334,88 +1334,88 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
 /**
  * Signature size, in bytes
  */
-@global export const SIGN_BYTES: isize = 64;
+ export const SIGN_BYTES: isize = 64;
 
 /**
  * Public key size, in bytes
  */
-@global export const SIGN_PUBLICKEYBYTES: isize = 32;
+ export const SIGN_PUBLICKEYBYTES: isize = 32;
 
 /**
  * Secret key size, in bytes
  */
-@global export const SIGN_SECRETKEYBYTES: isize = 32;
+ export const SIGN_SECRETKEYBYTES: isize = 32;
 
 /**
  * Key pair size, in bytes
  */
-@global export const SIGN_KEYPAIRBYTES: isize = 64;
+ export const SIGN_KEYPAIRBYTES: isize = 64;
 
 /**
  * Seed size, in bytes
  */
-@global export const SIGN_SEEDBYTES: isize = 32;
+ export const SIGN_SEEDBYTES: isize = 32;
 
 /**
  * Recommended random bytes size, in bytes
  */
-@global export const SIGN_RANDBYTES: isize = 32;
+ export const SIGN_RANDBYTES: isize = 32;
 
 /**
  * Ed25519 signature size, in bytes
  */
-@global export const SIGN_ED_BYTES: isize = 64;
+ export const SIGN_ED_BYTES: isize = 64;
 
 /**
  * Ed25519 public key size, in bytes
  */
-@global export const SIGN_ED_PUBLICKEYBYTES: isize = 32;
+ export const SIGN_ED_PUBLICKEYBYTES: isize = 32;
 
 /**
  * Ed25519 secret key size, in bytes
  */
-@global export const SIGN_ED_SECRETKEYBYTES: isize = 32;
+ export const SIGN_ED_SECRETKEYBYTES: isize = 32;
 
 /**
  * Ed25519 key pair size, in bytes
  */
-@global export const SIGN_ED_KEYPAIRBYTES: isize = 64;
+ export const SIGN_ED_KEYPAIRBYTES: isize = 64;
 
 /**
  * Ed25519 seed size, in bytes
  */
-@global export const SIGN_ED_SEEDBYTES: isize = 32;
+ export const SIGN_ED_SEEDBYTES: isize = 32;
 
 /**
  * Non-deterministic Ed25519 recommended random bytes size, in bytes
  */
-@global export const SIGN_ED_RANDBYTES: isize = 32;
+ export const SIGN_ED_RANDBYTES: isize = 32;
 
 /**
  * Hash function output size, in bytes
  */
-@global export const HASH_BYTES: isize = 64;
+ export const HASH_BYTES: isize = 64;
 
 /**
  * HMAC output size, in bytes
  */
-@global export const HMAC_BYTES: isize = 64;
+ export const HMAC_BYTES: isize = 64;
 
 /**
  * Size of an encoded scalar, in bytes
  */
-@global export const FA_SCALARBYTES: isize = 32;
+ export const FA_SCALARBYTES: isize = 32;
 
 /**
  * Size of an encoded point, in bytes
  */
-@global export const FA_POINTBYTES: isize = 32;
+ export const FA_POINTBYTES: isize = 32;
 
 /**
  * Fill an array with zeros
  * @param x Array to clear
  */
-@global export function memzero(x: Uint8Array): void {
+ export function memzero(x: Uint8Array): void {
     for (let i = 0, j = x.length; i < j; ++i) {
         x[i] = 0;
     }
@@ -1427,7 +1427,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param y Second array
  * @returns true if `x === y`
  */
-@global export function equals(x: Uint8Array, y: Uint8Array): bool {
+ export function equals(x: Uint8Array, y: Uint8Array): bool {
     let len = x.length;
     let d: u8 = 0;
 
@@ -1448,7 +1448,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  *     signatures
  * @returns Signature
  */
-@global export function sign(m: Uint8Array, kp: Uint8Array, Z: Uint8Array | null = null): Uint8Array {
+ export function sign(m: Uint8Array, kp: Uint8Array, Z: Uint8Array | null = null): Uint8Array {
     let sig = new Uint8Array(SIGN_BYTES);
     _signDetached(sig, m, kp, Z);
 
@@ -1462,7 +1462,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param pk Public key
  * @returns `true` on success
  */
-@global export function signVerify(sig: Uint8Array, m: Uint8Array, pk: Uint8Array): bool {
+ export function signVerify(sig: Uint8Array, m: Uint8Array, pk: Uint8Array): bool {
     if (sig.length !== SIGN_BYTES) {
         throw new Error('bad signature size');
     }
@@ -1477,7 +1477,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param seed Seed (`SIGN_SEEDBYTES` long)
  * @returns Key pair
  */
-@global export function signKeypairFromSeed(seed: Uint8Array): Uint8Array {
+ export function signKeypairFromSeed(seed: Uint8Array): Uint8Array {
     if (seed.length !== SIGN_SEEDBYTES) {
         throw new Error('bad seed size');
     }
@@ -1495,7 +1495,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param kp Key pair
  * @returns Public key
  */
-@global export function signPublicKey(kp: Uint8Array): Uint8Array {
+ export function signPublicKey(kp: Uint8Array): Uint8Array {
     const len = SIGN_PUBLICKEYBYTES;
     let pk = new Uint8Array(len);
 
@@ -1510,7 +1510,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param kp Key pair
  * @returns Secret key
  */
-@global export function signSecretKey(kp: Uint8Array): Uint8Array {
+ export function signSecretKey(kp: Uint8Array): Uint8Array {
     const len = SIGN_SECRETKEYBYTES;
     let sk = new Uint8Array(len);
 
@@ -1528,7 +1528,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  *     signatures
  * @returns Signature
  */
-@global export function signEd(m: Uint8Array, kp: Uint8Array, Z: Uint8Array | null = null): Uint8Array {
+ export function signEd(m: Uint8Array, kp: Uint8Array, Z: Uint8Array | null = null): Uint8Array {
     let sig = new Uint8Array(SIGN_ED_BYTES);
     _signEdDetached(sig, m, kp, Z);
 
@@ -1542,7 +1542,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param pk Public key
  * @returns `true` on success
  */
-@global export function signEdVerify(sig: Uint8Array, m: Uint8Array, pk: Uint8Array): bool {
+ export function signEdVerify(sig: Uint8Array, m: Uint8Array, pk: Uint8Array): bool {
     if (sig.length !== SIGN_ED_BYTES) {
         throw new Error('bad signature size');
     }
@@ -1557,7 +1557,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param seed Seed (`SIGN_ED_SEEDBYTES` long)
  * @returns Key pair
  */
-@global export function signEdKeypairFromSeed(seed: Uint8Array): Uint8Array {
+ export function signEdKeypairFromSeed(seed: Uint8Array): Uint8Array {
     if (seed.length !== SIGN_ED_SEEDBYTES) {
         throw new Error('bad seed size');
     }
@@ -1575,7 +1575,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param kp Key pair
  * @returns Public key
  */
-@global export function signEdPublicKey(kp: Uint8Array): Uint8Array {
+ export function signEdPublicKey(kp: Uint8Array): Uint8Array {
     const len = SIGN_ED_PUBLICKEYBYTES;
     let pk = new Uint8Array(len);
 
@@ -1590,7 +1590,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param kp Key pair
  * @returns Secret key
  */
-@global export function signEdSecretKey(kp: Uint8Array): Uint8Array {
+ export function signEdSecretKey(kp: Uint8Array): Uint8Array {
     const len = SIGN_ED_SECRETKEYBYTES;
     let sk = new Uint8Array(len);
 
@@ -1604,7 +1604,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * Initialize a multipart hash computation
  * @returns A hash function state
  */
-@global export function hashInit(): Uint8Array {
+ export function hashInit(): Uint8Array {
     return _hashInit();
 }
 
@@ -1613,7 +1613,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param st Hash function state
  * @param m (partial) message
  */
-@global export function hashUpdate(st: Uint8Array, m: Uint8Array): void {
+ export function hashUpdate(st: Uint8Array, m: Uint8Array): void {
     let r = load64_be(st, 64 + 128);
     let t = load64_be(st, 64 + 128 + 8);
     let n = m.length;
@@ -1629,7 +1629,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param st Hash function state
  * @returns Hash
  */
-@global export function hashFinal(st: Uint8Array): Uint8Array {
+ export function hashFinal(st: Uint8Array): Uint8Array {
     let h = new Uint8Array(HASH_BYTES);
     let r = load64_be(st, 64 + 128);
     let t = load64_be(st, 64 + 128 + 8);
@@ -1644,7 +1644,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param m Message
  * @returns Hash
  */
-@global export function hash(m: Uint8Array): Uint8Array {
+ export function hash(m: Uint8Array): Uint8Array {
     let st = hashInit();
 
     hashUpdate(st, m);
@@ -1658,7 +1658,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param k Key
  * @returns `HMAC-SHA-512(m, k)`
  */
-@global export function hmac(m: Uint8Array, k: Uint8Array): Uint8Array {
+ export function hmac(m: Uint8Array, k: Uint8Array): Uint8Array {
     return _hmac(m, k);
 }
 
@@ -1667,7 +1667,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param s Scalar
  * @returns `s^-1`
  */
-@global export function faScalarInverse(s: Uint8Array): Uint8Array {
+ export function faScalarInverse(s: Uint8Array): Uint8Array {
     return scInverse(s);
 }
 
@@ -1677,7 +1677,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param s Scalar (between 32 and 64 bytes)
  * @returns `s` reduced mod `L`
  */
-@global export function faScalarReduce(s: Uint8Array): Uint8Array {
+ export function faScalarReduce(s: Uint8Array): Uint8Array {
     let s_ = newScalarDouble();
     if (s.length < 32 || s.length > 64) {
         throw new Error('faScalarReduce() argument should be between 32 and 64 bytes long');
@@ -1697,7 +1697,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param s Scalar (32 bytes)
  * @returns `s * 8`
  */
-@global export function faScalarCofactorMult(s: Uint8Array): Uint8Array {
+ export function faScalarCofactorMult(s: Uint8Array): Uint8Array {
     if (s.length !== 32) {
         throw new Error('faScalarCofactorMult() argument should be 32 bytes long');
     }
@@ -1718,7 +1718,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param s Scalar
  * @returns `-s`
  */
-@global export function faScalarNegate(s: Uint8Array): Uint8Array {
+ export function faScalarNegate(s: Uint8Array): Uint8Array {
     let t = newScalarPacked(), t_ = newScalarDouble(), s_ = newScalarDouble();
 
     for (let i = 0; i < 32; i++) {
@@ -1737,7 +1737,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param s Scalar
  * @returns `1-s`
  */
-@global export function faScalarComplement(s: Uint8Array): Uint8Array {
+ export function faScalarComplement(s: Uint8Array): Uint8Array {
     let t = newScalarPacked(), t_ = newScalarDouble(), s_ = newScalarDouble();
     t_[0] = 1;
     for (let i = 0; i < 32; i++) {
@@ -1757,7 +1757,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param y Scalar
  * @returns `x + y (mod L)`
  */
-@global export function faScalarAdd(x: Uint8Array, y: Uint8Array): Uint8Array {
+ export function faScalarAdd(x: Uint8Array, y: Uint8Array): Uint8Array {
     let x_ = newScalarDouble(), y_ = newScalarDouble();
     setU8(x_, x);
     setU8(y_, y);
@@ -1772,7 +1772,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param y Scalar
  * @returns `x - y (mod L)`
  */
-@global export function faScalarSub(x: Uint8Array, y: Uint8Array): Uint8Array {
+ export function faScalarSub(x: Uint8Array, y: Uint8Array): Uint8Array {
     let yn = faScalarNegate(y);
 
     return faScalarAdd(x, yn);
@@ -1784,7 +1784,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param y Scalar
  * @returns `x * y (mod L)`
  */
-@global export function faScalarMult(x: Uint8Array, y: Uint8Array): Uint8Array {
+ export function faScalarMult(x: Uint8Array, y: Uint8Array): Uint8Array {
     let x_ = newScalar(), y_ = newScalar();
     let o = newScalar(), o_ = newScalarPacked();
 
@@ -1807,7 +1807,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param s Scalar
  * @returns Compressed EC point `q * s`
  */
-@global export function faEdPointMult(s: Uint8Array, q: Uint8Array): Uint8Array | null {
+ export function faEdPointMult(s: Uint8Array, q: Uint8Array): Uint8Array | null {
     let p_ = newGe();
     let q_ = newGe();
     if (!unpack(q_, q, false) || !faEdPointValidate(q)) {
@@ -1827,7 +1827,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param s Scalar
  * @returns Compressed EC point `B * s`
  */
-@global export function faEdBasePointMult(s: Uint8Array): Uint8Array | null {
+ export function faEdBasePointMult(s: Uint8Array): Uint8Array | null {
     if (allZeros(s)) {
         return null;
     }
@@ -1845,7 +1845,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param s Scalar
  * @returns Compressed EC point `q * clamp(s)`
  */
-@global export function faEdPointMultClamp(s: Uint8Array, q: Uint8Array): Uint8Array | null {
+ export function faEdPointMultClamp(s: Uint8Array, q: Uint8Array): Uint8Array | null {
     let s_ = newScalarPacked();
     setU8(s_, s);
     scClamp(s_);
@@ -1858,7 +1858,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param s Scalar
  * @returns Compressed EC point `B * clamp(s)`
  */
-@global export function faEdBasePointMultClamp(s: Uint8Array): Uint8Array | null {
+ export function faEdBasePointMultClamp(s: Uint8Array): Uint8Array | null {
     let s_ = newScalarPacked();
     setU8(s_, s);
     scClamp(s_);
@@ -1871,7 +1871,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param q Compressed EC point
  * @returns `true` if verification succeeds
  */
-@global export function faEdPointValidate(q: Uint8Array): bool {
+ export function faEdPointValidate(q: Uint8Array): bool {
     if (isIdentity(q)) {
         return false;
     }
@@ -1901,7 +1901,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param q Compressed EC point
  * @returns `p` + `q`
  */
-@global export function faEdPointAdd(p: Uint8Array, q: Uint8Array): Uint8Array | null {
+ export function faEdPointAdd(p: Uint8Array, q: Uint8Array): Uint8Array | null {
     let o = newGePacked();
     let p_ = newGe();
     let q_ = newGe();
@@ -1920,7 +1920,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param q Compressed EC point
  * @returns `p` - `q`
  */
-@global export function faEdPointSub(p: Uint8Array, q: Uint8Array): Uint8Array | null {
+ export function faEdPointSub(p: Uint8Array, q: Uint8Array): Uint8Array | null {
     let o = newGePacked();
     let p_ = newGe();
     let q_ = newGe();
@@ -1939,7 +1939,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param s Scalar
  * @returns Compressed EC point `q * s`
  */
-@global export function faPointMult(s: Uint8Array, q: Uint8Array): Uint8Array | null {
+ export function faPointMult(s: Uint8Array, q: Uint8Array): Uint8Array | null {
     let p_ = newGe();
     let q_ = newGe();
     if (!ristrettoUnpack(q_, q)) {
@@ -1959,7 +1959,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param s Scalar
  * @returns Ristretto-compressed EC point `B * s`
  */
-@global export function faBasePointMult(s: Uint8Array): Uint8Array | null {
+ export function faBasePointMult(s: Uint8Array): Uint8Array | null {
     if (allZeros(s)) {
         return null;
     }
@@ -1976,7 +1976,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param q Ristretto-compressed EC point
  * @returns `true` if verification succeeds
  */
-@global export function faPointValidate(q: Uint8Array): bool {
+ export function faPointValidate(q: Uint8Array): bool {
     let q_ = newGe();
 
     return (!ristrettoIsIdentity(q)) & ristrettoUnpack(q_, q);
@@ -1988,7 +1988,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param q Risterto-compressed EC point
  * @returns `p` + `q`
  */
-@global export function faPointAdd(p: Uint8Array, q: Uint8Array): Uint8Array | null {
+ export function faPointAdd(p: Uint8Array, q: Uint8Array): Uint8Array | null {
     let o = newGePacked();
     let p_ = newGe();
     let q_ = newGe();
@@ -2007,7 +2007,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param q Ristretto-compressed EC point
  * @returns `p` - `q`
  */
-@global export function faPointSub(p: Uint8Array, q: Uint8Array): Uint8Array | null {
+ export function faPointSub(p: Uint8Array, q: Uint8Array): Uint8Array | null {
     let o = newGePacked();
     let p_ = newGe();
     let q_ = newGe();
@@ -2025,7 +2025,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param r 512 bit hash
  * @returns Ristretto-compressed EC point
  */
-@global export function faPointFromHash(r: Uint8Array): Uint8Array {
+ export function faPointFromHash(r: Uint8Array): Uint8Array {
     let p = newGePacked();
 
     ristrettoFromHash(p, r);
@@ -2038,7 +2038,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param bin Binary data
  * @returns Hex-encoded representation
  */
-@global export function bin2hex(bin: Uint8Array): string {
+ export function bin2hex(bin: Uint8Array): string {
     let bin_len = bin.length;
     let hex = "";
     for (let i = 0; i < bin_len; i++) {
@@ -2059,7 +2059,7 @@ function _signVerifyDetached(sig: Signature, m: Uint8Array, pk: GePacked): bool 
  * @param hex Hex-encoded data
  * @returns Raw binary representation
  */
-@global export function hex2bin(hex: string): Uint8Array | null {
+ export function hex2bin(hex: string): Uint8Array | null {
     let hex_len = hex.length;
     if ((hex_len & 1) !== 0) {
         return null;
